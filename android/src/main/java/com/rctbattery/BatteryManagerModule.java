@@ -49,9 +49,14 @@ public class BatteryManagerModule extends ReactContextBaseJavaModule {
   private WritableNativeMap getJSMap (Intent intent) {
     int batteryLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
     int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+    int plugStatus = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+
     boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
+    boolean isPlugged = plugStatus == BatteryManager.BATTERY_PLUGGED_USB || plugStatus == BatteryManager.BATTERY_PLUGGED_AC;
+    boolean isChargingOrPlugged = isCharging || isPlugged;
+
     WritableNativeMap params = new WritableNativeMap();
-    params.putBoolean(IS_CHARGING_KEY, isCharging);
+    params.putBoolean(IS_CHARGING_KEY, isChargingOrPlugged);
     params.putInt(BATTERY_LEVEL_KEY, batteryLevel);
     return params;
   }
